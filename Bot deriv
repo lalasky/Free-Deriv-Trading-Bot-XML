@@ -1,0 +1,110 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable id="stake">stake</variable>
+  </variables>
+
+  <block type="trade" x="20" y="20">
+    <field name="MARKET_LIST">forex</field>
+    <field name="SUBMARKET_LIST">major_pairs</field>
+    <field name="SYMBOL_LIST">frxEURUSD</field>
+
+    <value name="INITIALIZE">
+      <block type="variables_set">
+        <field name="VAR" id="stake">stake</field>
+        <value name="VALUE">
+          <block type="math_number">
+            <field name="NUM">1</field>
+          </block>
+        </value>
+      </block>
+    </value>
+
+    <value name="TRADE_OPTIONS">
+      <block type="trade_definition_market">
+        <field name="TRADE_TYPE">rise_fall</field>
+        <field name="DURATION">5</field>
+        <field name="DURATION_UNIT">m</field>
+      </block>
+    </value>
+
+    <statement name="BEFORE_PURCHASE">
+      <block type="controls_if">
+        <value name="IF0">
+          <block type="logic_and">
+            <value name="A">
+              <block type="indicators_ema">
+                <field name="PERIOD">20</field>
+                <field name="COMPARISON">></field>
+                <value name="SECOND_EMA">
+                  <block type="indicators_ema">
+                    <field name="PERIOD">50</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="indicators_rsi">
+                <field name="PERIOD">14</field>
+                <field name="COMPARISON">></field>
+                <value name="VALUE">
+                  <block type="math_number">
+                    <field name="NUM">55</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+
+        <statement name="DO0">
+          <block type="purchase">
+            <field name="CONTRACT_TYPE">CALL</field>
+            <value name="AMOUNT">
+              <block type="variables_get">
+                <field name="VAR" id="stake">stake</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+
+        <value name="IF1">
+          <block type="logic_and">
+            <value name="A">
+              <block type="indicators_ema">
+                <field name="PERIOD">20</field>
+                <field name="COMPARISON"><</field>
+                <value name="SECOND_EMA">
+                  <block type="indicators_ema">
+                    <field name="PERIOD">50</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="indicators_rsi">
+                <field name="PERIOD">14</field>
+                <field name="COMPARISON"><</field>
+                <value name="VALUE">
+                  <block type="math_number">
+                    <field name="NUM">45</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+
+        <statement name="DO1">
+          <block type="purchase">
+            <field name="CONTRACT_TYPE">PUT</field>
+            <value name="AMOUNT">
+              <block type="variables_get">
+                <field name="VAR" id="stake">stake</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+</xml>
